@@ -42,25 +42,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendGet(View v){
-        new MyAsyncTask().execute();
+        loadAnswers();
     }
     public void sendPost(View v){
-        new MyAsyncTask1().execute();
-    }
-    class MyAsyncTask extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            loadAnswers();
-            return null;
-        }
-    }
-
-    class MyAsyncTask1 extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            postAnswer();
-            return null;
-        }
+        postAnswer();
     }
 
     public void loadAnswers() {
@@ -68,27 +53,27 @@ public class MainActivity extends AppCompatActivity {
         getService.getList().enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     try {
                         user.addAll(response.body());
                         Log.d("MainAlctivity", "posts loaded from API");
-                        if(user.isEmpty()){
-                            Toast.makeText(getApplicationContext(),"EMPTY",Toast.LENGTH_SHORT).show();
-                        }else{
-                            for (int i = 0; i <user.size() ; i++) {
+                        if (user.isEmpty()) {
+                            Toast.makeText(getApplicationContext(), "EMPTY", Toast.LENGTH_SHORT).show();
+                        } else {
+                            for (int i = 0; i < user.size(); i++) {
                                 baseHs = new HashMap<String, String>();
-                                baseHs.put("id",user.get(i).id.toString());
-                                baseHs.put("Name",user.get(i).name.toString());
+                                baseHs.put("id", user.get(i).id.toString());
+                                baseHs.put("Name", user.get(i).name.toString());
                                 base.add(baseHs);
                             }
                             setAdapter();
                             base = new ArrayList<HashMap<String, String>>();
                         }
-                    }catch (Exception e){
-                        Log.e("ERROR", "onResponse: "+e.toString() );
+                    } catch (Exception e) {
+                        Log.e("ERROR", "onResponse: " + e.toString());
                     }
-                }else {
-                    int statusCode  = response.code();
+                } else {
+                    int statusCode = response.code();
                     // handle request errors depending on status code
                 }
             }
